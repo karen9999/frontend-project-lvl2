@@ -40,7 +40,7 @@ jobs:
         # Run Linter
         run: |
           make lint
-          name: Run Test
+      - name: Run Test
         # Run Test
         run: |
           npx jest
