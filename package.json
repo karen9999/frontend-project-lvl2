@@ -29,7 +29,9 @@
     "@babel/core": "^7.9.0",
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.9.5",
-    "eslint-config-prettier": "^6.10.1"
+    "babel-jest": "^25.4.0",
+    "eslint-config-prettier": "^6.10.1",
+    "jest": "^25.4.0"
   },
   "dependencies": {
     "commander": "^5.0.0",

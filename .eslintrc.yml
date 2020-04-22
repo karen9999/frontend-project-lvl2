@@ -1,20 +1,18 @@
 #plugins:
-  #- jest
-  #- babel
+   #- jest
+   #- babel
 
 env:
   node: true
   #jest: true
 
-#parser: babel-eslint
+  #parser: babel-eslint
 
 extends:
   - "airbnb-base"
   - "prettier"
   #- "plugin:jest/recommended"
 
-
 rules:
   no-console: 0
   import/extensions: 0
-  qutes: 0
