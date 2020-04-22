@@ -4,7 +4,6 @@ name: Node CI
 # Trigger the workflow on push or pull request
 on:
   - push
-  - pull_request
 
 jobs:
   build:
@@ -32,8 +31,13 @@ jobs:
       - name: npm install, build
         # Install and build project
         run: |
-          make install
-          make build
+          npm install
+          npm run build
+      - name: Jest 
+        #test
+        run: |
+          npx jest
+          
         # Add environment variables
         env:
           CI: true
