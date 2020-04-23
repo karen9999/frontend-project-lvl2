@@ -2,4 +2,3 @@
 
 import start from '../commander.js';
 
-start();
