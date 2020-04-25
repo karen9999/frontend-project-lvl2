@@ -1,5 +1,4 @@
-import genDifference from "./index.js";
-import toParsit from "./parser.js";
+import genDifference from "..";
 
 const { program } = require("commander");
 
@@ -9,9 +8,6 @@ program
   .description("Compares two configuration files and shows a difference.")
   .option("-f, --format [type]", "output format")
   .action(function getPath(firstConfig, secondConfig) {
-    const file1 = toParsit(firstConfig);
-    const file2 = toParsit(secondConfig);
-    console.log(genDifference(file1, file2));
+    console.log(genDifference(firstConfig, secondConfig));
   });
-
 program.parse(process.argv);

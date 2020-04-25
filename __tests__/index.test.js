@@ -1,5 +1,10 @@
-import diff from '../src/index.js';
+import diff from "../src/index";
 
-test('diff', () => {
-  expect(diff({a: 1, b: 1}, {a: 1, b: 1})).toEqual(`{\n    a: 1\n    b: 1\n}`);
+const differenceBetweenFile = `{\n    host: hexlet.io\n  + verbose: true\n  + timeout: 20\n  - timeout: 50\n  - proxy: 123.234.53.22\n  - follow: false\n}`;
+
+test("diff", () => {
+  expect(
+    diff("../before.json", "../after.json")).toEqual(differenceBetweenFile);
+  expect(diff("../file1.yaml", "../file2.yaml")).toEqual(differenceBetweenFile);
+  expect(diff("../file1.ini", "../file2.ini")).toEqual(differenceBetweenFile);
 });

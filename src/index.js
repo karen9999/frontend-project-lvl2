@@ -1,6 +1,13 @@
+import toParsit from "./parser.js";
+
 const _ = require("lodash");
 
-export default (file1, file2) => {
+export default (firstFile, secondFile) => {
+  const file1 = toParsit(firstFile);
+  const file2 = toParsit(secondFile);
+  if (file1 === null || file2 === null) {
+    return "unsupported format";
+  }
   const keysOfFile1 = Object.keys(file1);
   const keysOfFile2 = Object.keys(file2);
   const addedValue = keysOfFile2.reduce((acc, value) => {
