@@ -3,7 +3,7 @@ import stylish from "../src/formatters/stylish";
 import toJson from "../src/formatters/toJson";
 import makeTree from "../src/tree";
 import toParsit from "../src/parsers";
-1
+
 const path = require("path");
 
 const getFixturePath = (filename) =>
