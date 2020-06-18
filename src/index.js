@@ -1,4 +1,4 @@
-import toParsit from "./parser.js";
+import toParsit from "./parsers.js";
 
 const _ = require("lodash");
 

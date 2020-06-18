@@ -11,3 +11,4 @@ test("diff", () => {
   expect(diff(getFixturePath("before.yaml"), getFixturePath("after.yaml"))).toEqual(differenceBetweenFile);
   expect(diff(getFixturePath("before.ini"), getFixturePath("after.ini"))).toEqual(differenceBetweenFile);
 });
+
