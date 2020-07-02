@@ -1,7 +1,7 @@
-const fs = require("fs");
-const yaml = require("js-yaml");
-const path = require("path");
-const ini = require("ini");
+import ini from "ini";
+import fs from "fs";
+import yaml from "js-yaml";
+import path from "path";
 
 const toParsit = (file) => {
   if (path.extname(file) === ".json") {

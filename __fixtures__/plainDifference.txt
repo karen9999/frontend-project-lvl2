@@ -1,0 +1,2 @@
+Property group1.baz was changed from bas to bars
+Property group1.nest was changed from [complex value] to str

@@ -1,4 +1,4 @@
-const _ = require("lodash");
+import _ from "lodash";
 
 const convertValueToString = (val) => {
   if (_.isObject(val)) {

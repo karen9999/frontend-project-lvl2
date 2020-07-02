@@ -1,6 +1,5 @@
-import toParsit from "./parsers.js";
-
-const _ = require("lodash");
+import _ from "lodash";
+import toParsit from "./parsers";
 
 export default (firstFile, secondFile) => {
   const file1 = toParsit(firstFile);

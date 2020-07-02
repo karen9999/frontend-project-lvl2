@@ -1,10 +1,10 @@
+import fs from "fs";
+import path from "path";
 import plain from "../src/formatters/plain";
 import stylish from "../src/formatters/stylish";
 import toJson from "../src/formatters/toJson";
 import makeTree from "../src/tree";
 import toParsit from "../src/parsers";
-
-const path = require("path");
 
 const getFixturePath = (filename) =>
   path.join(__dirname, "..", "__fixtures__", filename);
@@ -21,8 +21,10 @@ const tree3 = makeTree(
   toParsit(getFixturePath("recursive2.yaml"))
 );
 
-const recursiveDifference =
-  "{\n    group1: {\n      + baz: bars\n      - baz: bas\n        foo: bar\n      + nest: str\n      - nest: {\n            key: value\n        }\n    }\n}";
+const recursiveDifference = fs.readFileSync(
+  getFixturePath("recursiveDifference.txt"),
+  "utf-8"
+);
 
 test("recursive formatter", () => {
   expect(stylish(tree1)).toEqual(recursiveDifference);
@@ -30,8 +32,10 @@ test("recursive formatter", () => {
   expect(stylish(tree3)).toEqual(recursiveDifference);
 });
 
-const plainDifference =
-  "Property group1.baz was changed from bas to bars\nProperty group1.nest was changed from [complex value] to str\n";
+const plainDifference = fs.readFileSync(
+  getFixturePath("plainDifference.txt"),
+  "utf-8"
+);
 
 test("plain formatter", () => {
   expect(plain(tree1)).toEqual(plainDifference);
@@ -39,8 +43,10 @@ test("plain formatter", () => {
   expect(plain(tree3)).toEqual(plainDifference);
 });
 
-const differenceInJSON =
-  '[{"name":"group1","status":"unmodified","currentValue":"","previousValue":"","children":[{"name":"baz","status":"modified","currentValue":"bars","previousValue":"bas","children":[]},{"name":"foo","status":"unmodified","currentValue":"bar","previousValue":"","children":[]},{"name":"nest","status":"modified","currentValue":"str","previousValue":{"key":"value"},"children":[]}]}]';
+const differenceInJSON = fs.readFileSync(
+  getFixturePath("differenceInJSON.txt"),
+  "utf-8"
+);
 
 test("JSON formatter", () => {
   expect(toJson(tree1)).toEqual(differenceInJSON);

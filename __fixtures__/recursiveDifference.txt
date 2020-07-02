@@ -1,0 +1,11 @@
+{
+    group1: {
+      + baz: bars
+      - baz: bas
+        foo: bar
+      + nest: str
+      - nest: {
+            key: value
+        }
+    }
+}
