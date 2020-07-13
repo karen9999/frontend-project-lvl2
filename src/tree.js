@@ -1,58 +1,51 @@
-import _ from "lodash";
+import _ from 'lodash';
 
 const makeNode = (
   name,
   status,
   currentValue,
-  previousValue = "",
-  children = []
-) => {
-  return {
-    name,
-    status,
-    currentValue,
-    previousValue,
-    children,
-  };
-};
+  previousValue = '',
+  children = [],
+) => ({
+  name,
+  status,
+  currentValue,
+  previousValue,
+  children,
+});
 
-const makeTree = (before, after) => {
-  const beforeKeys = Object.keys(before);
-  const beforeValues = Object.values(before);
-  const afterKeys = Object.keys(after);
+const makeTree = (valueBefore, valueAfter) => {
+  const keysBefore = Object.keys(valueBefore);
+  const valuesBefore = Object.values(valueBefore);
+  const keysAfter = Object.keys(valueAfter);
 
-  const modifiedAndUnmodifiedValues = beforeKeys
+  const modifiedAndUnmodifiedValues = keysBefore
     .map((key, index) => {
       if (
-        afterKeys.includes(key) &&
-        typeof beforeValues[index] === "object" &&
-        typeof after[key] === "object"
+        keysAfter.includes(key) && typeof valuesBefore[index] === 'object' && typeof valueAfter[key] === 'object'
       ) {
         return makeNode(
           key,
-          "unmodified",
-          "",
-          "",
-          makeTree(beforeValues[index], after[key])
+          'unmodified',
+          '',
+          '',
+          makeTree(valuesBefore[index], valueAfter[key]),
         );
       }
-      if (!afterKeys.includes(key)) {
-        return makeNode(key, "deleted", before[key], "", []);
+      if (!keysAfter.includes(key)) {
+        return makeNode(key, 'deleted', valueBefore[key], '', []);
       }
-      if (typeof before[key] !== "object" || typeof after[key] !== "object") {
-        return beforeValues[index] === after[key]
-          ? makeNode(key, "unmodified", beforeValues[index])
-          : makeNode(key, "modified", after[key], before[key]);
+      if (typeof valueBefore[key] !== 'object' || typeof valueAfter[key] !== 'object') {
+        return valuesBefore[index] === valueAfter[key]
+          ? makeNode(key, 'unmodified', valuesBefore[index])
+          : makeNode(key, 'modified', valueAfter[key], valueBefore[key]);
       }
       return [];
     })
     .flat();
-  const addedValues = afterKeys
-    .filter((key) => !beforeKeys.includes(key))
-    .map((key) => {
-      return makeNode(key, "added", after[key]);
-    });
-
+  const addedValues = keysAfter
+    .filter((key) => !keysBefore.includes(key))
+    .map((key) => makeNode(key, 'added', valueAfter[key]));
   return _.concat(modifiedAndUnmodifiedValues, addedValues);
 };
 export default makeTree;

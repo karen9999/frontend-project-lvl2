@@ -1,1 +1,0 @@
-[{"name":"group1","status":"unmodified","currentValue":"","previousValue":"","children":[{"name":"baz","status":"modified","currentValue":"bars","previousValue":"bas","children":[]},{"name":"foo","status":"unmodified","currentValue":"bar","previousValue":"","children":[]},{"name":"nest","status":"modified","currentValue":"str","previousValue":{"key":"value"},"children":[]}]}]

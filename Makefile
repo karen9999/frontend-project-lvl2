@@ -1,24 +1,17 @@
+install:
+	npm install
 
-install: install-deps
+gendiff:
+	npx babel-node src/bin/gendiff.js
 
-run:
-	npx babel-node 'src/bin/hexlet.js' 10
-
-install-deps:
-	npm ci
-
-build:
-	rm -rf dist
-	npm run build
-
-test:
-	npm test
-
-test-coverage:
-	npm test -- --coverage
+publish:
+	npm publish --dry-run
 
 lint:
 	npx eslint .
 
-publish:
-	npm publish --dry-run
+build:
+	npm run build
+	
+test:
+	npm run test

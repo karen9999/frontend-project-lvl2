@@ -1,19 +1,19 @@
-import _ from "lodash";
+import _ from 'lodash';
 
 const makeString = (node) => {
   switch (node.status) {
-    case "added":
+    case 'added':
       return `${node.name} was added with value: ${
-        _.isObject(node.currentValue) ? "[complex value]" : node.currentValue
+        _.isObject(node.currentValue) ? '[complex value]' : node.currentValue
       }`;
-    case "deleted":
+    case 'deleted':
       return `${node.name} was deleted`;
-    case "modified": {
+    case 'modified': {
       const current = _.isObject(node.currentValue)
-        ? "[complex value]"
+        ? '[complex value]'
         : node.currentValue;
       const previous = _.isObject(node.previousValue)
-        ? "[complex value]"
+        ? '[complex value]'
         : node.previousValue;
       return `${node.name} was changed from ${previous} to ${current}`;
     }
@@ -31,9 +31,9 @@ const plain = (tree) => {
     });
     return result
       .flat(Infinity)
-      .filter((node) => !node.includes("undefined"))
+      .filter((node) => !node.includes('undefined'))
       .join('');
   };
-  return iter("", tree);
+  return iter('', tree);
 };
 export default plain;

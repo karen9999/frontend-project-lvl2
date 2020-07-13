@@ -12,7 +12,6 @@ parser: babel-eslint
 
 extends:
   - "airbnb-base"
-  - "prettier"
   - 'plugin:jest/recommended'
 
 rules:
