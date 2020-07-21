@@ -9,9 +9,9 @@ test.each([
   ['json', 'plain'], ['yaml', 'plain'], ['ini', 'plain'],
   ['json', 'json'], ['yaml', 'json'], ['ini', 'json'],
 ])('%s', (type, format) => {
-  const valueBefore = getPath(`before.${type}`);
-  const valueAfter = getPath(`after.${type}`);
-  const actual = gendiff(valueBefore, valueAfter, format);
+  const beforeFilePath = getPath(`before.${type}`);
+  const afterFilePath = getPath(`after.${type}`);
+  const actual = gendiff(beforeFilePath, afterFilePath, format);
   const expected = fs.readFileSync(getPath(`${format}Difference`), 'utf-8');
   expect(actual).toEqual(expected);
 });

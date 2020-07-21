@@ -1,18 +1,18 @@
-import formatter from './formatters/stylish';
-import toParsit from './parsing';
+import path from 'path';
+import fs from 'fs';
+import generateDifference from './formatters/index';
+import parse from './parsing';
 import makeTree from './tree';
-import plain from './formatters/plain';
-import toJson from './formatters/toJson';
 
-export default (fileName1, fileName2, format) => {
-  const value1 = toParsit(fileName1);
-  const value2 = toParsit(fileName2);
+const getExtName = (filePath) => path.extname(filePath);
+
+export default (filePath1, filePath2, format) => {
+  const extName1 = getExtName(filePath1);
+  const extName2 = getExtName(filePath2);
+  const file1 = fs.readFileSync(filePath1, 'utf-8');
+  const file2 = fs.readFileSync(filePath2, 'utf-8');
+  const value1 = parse(file1, extName1);
+  const value2 = parse(file2, extName2);
   const tree = makeTree(value1, value2);
-  if (format === 'plain') {
-    return plain(tree);
-  }
-  if (format === 'json') {
-    return toJson(tree);
-  }
-  return formatter(tree);
+  return generateDifference(format, tree);
 };

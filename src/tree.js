@@ -14,38 +14,30 @@ const makeNode = (
   children,
 });
 
-const makeTree = (valueBefore, valueAfter) => {
-  const keysBefore = Object.keys(valueBefore);
-  const valuesBefore = Object.values(valueBefore);
-  const keysAfter = Object.keys(valueAfter);
-
-  const modifiedAndUnmodifiedValues = keysBefore
-    .map((key, index) => {
-      if (
-        keysAfter.includes(key) && typeof valuesBefore[index] === 'object' && typeof valueAfter[key] === 'object'
-      ) {
-        return makeNode(
-          key,
-          'unmodified',
-          '',
-          '',
-          makeTree(valuesBefore[index], valueAfter[key]),
-        );
-      }
-      if (!keysAfter.includes(key)) {
-        return makeNode(key, 'deleted', valueBefore[key], '', []);
-      }
-      if (typeof valueBefore[key] !== 'object' || typeof valueAfter[key] !== 'object') {
-        return valuesBefore[index] === valueAfter[key]
-          ? makeNode(key, 'unmodified', valuesBefore[index])
-          : makeNode(key, 'modified', valueAfter[key], valueBefore[key]);
-      }
-      return [];
-    })
-    .flat();
-  const addedValues = keysAfter
-    .filter((key) => !keysBefore.includes(key))
-    .map((key) => makeNode(key, 'added', valueAfter[key]));
-  return _.concat(modifiedAndUnmodifiedValues, addedValues);
+const makeTree = (obj1, obj2) => {
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+  const unionKeys = _.union(keys1, keys2);
+  return unionKeys.map((key) => {
+    if (_.isObject(obj1[key]) && _.isObject(obj2[key])) {
+      return makeNode(
+        key,
+        'unmodified',
+        '',
+        '',
+        makeTree(obj1[key], obj2[key]),
+      );
+    }
+    if (obj1[key] === obj2[key]) {
+      return makeNode(key, 'unmodified', obj1[key], '', []);
+    }
+    if (obj2[key] === undefined) {
+      return makeNode(key, 'deleted', obj1[key], '', []);
+    }
+    if (obj1[key] === undefined) {
+      return makeNode(key, 'added', obj2[key], '', []);
+    }
+    return makeNode(key, 'modified', obj2[key], obj1[key], []);
+  });
 };
 export default makeTree;
