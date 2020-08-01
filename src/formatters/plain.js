@@ -1,39 +1,31 @@
 import _ from 'lodash';
 
+const getValue = (value) => (_.isObject(value) ? '[complex value]' : value);
 const makeString = (node) => {
-  switch (node.status) {
-    case 'added':
-      return `${node.name} was added with value: ${
-        _.isObject(node.currentValue) ? '[complex value]' : node.currentValue
-      }`;
-    case 'deleted':
-      return `${node.name} was deleted`;
-    case 'modified': {
-      const current = _.isObject(node.currentValue)
-        ? '[complex value]'
-        : node.currentValue;
-      const previous = _.isObject(node.previousValue)
-        ? '[complex value]'
-        : node.previousValue;
-      return `${node.name} was changed from ${previous} to ${current}`;
-    }
-    default:
-      return undefined;
+  if (node.status === 'unmodified' && !_.isEmpty(node.children)) {
+    return node.children.map((child) => `${node.name}.${makeString(child)}`);
+  }
+  if (node.status === 'added') {
+    return `${node.name} was added with value: ${getValue(node.currentValue)}`;
+  }
+  if (node.status === 'deleted') {
+    return `${node.name} was deleted`;
+  }
+  if (node.status === 'modified') {
+    return `${node.name} was changed from ${getValue(
+      node.previousValue,
+    )} to ${getValue(node.currentValue)}`;
+  }
+  if (node.status === 'unmodified') {
+    return null;
   }
 };
 const plain = (tree) => {
-  const iter = (acc, nodes) => {
-    const result = nodes.map((node) => {
-      if (_.isEmpty(node.children)) {
-        return `Property ${acc}${makeString(node)}\n`;
-      }
-      return iter(`${acc}${node.name}.`, node.children);
-    });
-    return result
-      .flat(Infinity)
-      .filter((node) => !node.includes('undefined'))
-      .join('');
-  };
-  return iter('', tree);
+  return tree
+    .map(makeString)
+    .flat()
+    .filter((child) => !child.includes(null))
+    .map((str) => `Property ${str}`)
+    .join('\n');
 };
 export default plain;

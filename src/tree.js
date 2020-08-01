@@ -28,16 +28,21 @@ const makeTree = (obj1, obj2) => {
         makeTree(obj1[key], obj2[key]),
       );
     }
+    if (obj1[key] !== obj2[key]) {
+      if (_.has(obj1, key) && _.has(obj2, key)) {
+        return makeNode(key, 'modified', obj2[key], obj1[key], []);
+      }
+    }
     if (obj1[key] === obj2[key]) {
       return makeNode(key, 'unmodified', obj1[key], '', []);
     }
-    if (obj2[key] === undefined) {
+
+    if (!_.has(obj2, key)) {
       return makeNode(key, 'deleted', obj1[key], '', []);
     }
-    if (obj1[key] === undefined) {
+    if (!_.has(obj1, key)) {
       return makeNode(key, 'added', obj2[key], '', []);
     }
-    return makeNode(key, 'modified', obj2[key], obj1[key], []);
   });
 };
 export default makeTree;
