@@ -10,7 +10,7 @@ const convertValueToString = (data) => {
 
 const makeString = (tree, depth = 0) => {
   const space = (level) => ' '.repeat(level);
-  if (tree.status === 'added') {
+  if (tree.type === 'added') {
     if (_.isObject(tree.currentValue)) {
       return `  ${space(depth)}+ ${tree.name}: {\n        ${space(
         depth,
@@ -20,12 +20,12 @@ const makeString = (tree, depth = 0) => {
       tree.currentValue,
     )}\n`;
   }
-  if (tree.status === 'unmodified' && tree.children.length === 0) {
+  if (tree.type === 'unmodified') {
     return `    ${space(depth)}${tree.name}: ${convertValueToString(
       tree.currentValue,
     )}\n`;
   }
-  if (tree.status === 'deleted') {
+  if (tree.type === 'deleted') {
     if (_.isObject(tree.currentValue)) {
       return `  ${space(depth)}- ${tree.name}: {\n        ${space(
         depth,
@@ -35,7 +35,7 @@ const makeString = (tree, depth = 0) => {
       tree.currentValue,
     )}\n`;
   }
-  if (tree.status === 'modified') {
+  if (tree.type === 'modified') {
     if (_.isObject(tree.currentValue) && !_.isObject(tree.previousValue)) {
       return `  ${space(depth)}+ ${tree.name}: {\n        ${space(
         depth,

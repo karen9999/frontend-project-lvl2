@@ -3,14 +3,14 @@ import yaml from 'js-yaml';
 import convert from './convertToNumber';
 
 export default (content, extName) => {
-  if (extName === '.json') {
-    return JSON.parse(content);
+  switch (extName) {
+    case '.json':
+      return JSON.parse(content);
+    case '.yaml':
+      return convert(yaml.safeLoad(content));
+    case '.ini':
+      return convert(ini.parse(content));
+    default:
+      throw new Error('unsupported format');
   }
-  if (extName === '.yaml') {
-    return convert(yaml.safeLoad(content));
-  }
-  if (extName === '.ini') {
-    return convert(ini.parse(content));
-  }
-  throw new Error('unsupported format');
 };
