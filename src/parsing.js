@@ -7,10 +7,10 @@ export default (content, extName) => {
     case '.json':
       return JSON.parse(content);
     case '.yaml':
-      return convert(yaml.safeLoad(content));
+      return yaml.safeLoad(content);
     case '.ini':
       return convert(ini.parse(content));
     default:
-      throw new Error('unsupported format');
+      throw new Error(`Unknown format: ${extName}!`);
   }
 };

@@ -1,72 +1,44 @@
 import _ from 'lodash';
 
-const convertValueToString = (data) => {
-  if (_.isObject(data)) {
-    const [key, value] = Object.entries(data).flat();
-    return `${key}: ${value}`;
-  }
-  return `${data}`;
-};
+const makeSpaces = (level) => '  '.repeat(level);
 
-const makeString = (tree, depth = 0) => {
-  const space = (level) => ' '.repeat(level);
-  if (tree.type === 'added') {
-    if (_.isObject(tree.currentValue)) {
-      return `  ${space(depth)}+ ${tree.name}: {\n        ${space(
-        depth,
-      )}${convertValueToString(tree.currentValue)}\n    ${space(depth)}}\n`;
-    }
-    return `  ${space(depth)}+ ${tree.name}: ${convertValueToString(
-      tree.currentValue,
-    )}\n`;
+const convertValueToString = (data, depth) => {
+  if (!_.isObject(data)) {
+    return data;
   }
-  if (tree.type === 'unmodified') {
-    return `    ${space(depth)}${tree.name}: ${convertValueToString(
-      tree.currentValue,
-    )}\n`;
-  }
-  if (tree.type === 'deleted') {
-    if (_.isObject(tree.currentValue)) {
-      return `  ${space(depth)}- ${tree.name}: {\n        ${space(
-        depth,
-      )}${convertValueToString(tree.currentValue)}\n   ${space(depth)} }\n`;
-    }
-    return `  ${space(depth)}- ${tree.name}: ${convertValueToString(
-      tree.currentValue,
-    )}\n`;
-  }
-  if (tree.type === 'modified') {
-    if (_.isObject(tree.currentValue) && !_.isObject(tree.previousValue)) {
-      return `  ${space(depth)}+ ${tree.name}: {\n        ${space(
-        depth,
-      )}${convertValueToString(tree.currentValue)}\n    ${space(
-        depth,
-      )}}\n  ${space(depth)}- ${tree.name}: ${convertValueToString(
-        tree.previousValue,
-      )}\n`;
-    }
-    if (!_.isObject(tree.currentValue) && _.isObject(tree.previousValue)) {
-      return `  ${space(depth)}+ ${tree.name}: ${convertValueToString(
-        tree.currentValue,
-      )}\n  ${space(depth)}- ${tree.name}: {\n        ${space(
-        depth,
-      )}${convertValueToString(tree.previousValue)}\n        }\n`;
-    }
-    return `  ${space(depth)}+ ${tree.name}: ${convertValueToString(
-      tree.currentValue,
-    )}\n  ${space(depth)}- ${tree.name}: ${convertValueToString(
-      tree.previousValue,
-    )}\n`;
-  }
-  return `    ${space(depth)}${tree.name}: {\n${space(
-    depth,
-  )}${tree.children.map((node) => makeString(node, 4)).join('')}    ${space(
-    depth,
-  )}}\n`;
+  return `{\n${_.keys(data)
+    .map((key) => `${makeSpaces(depth + 2)}  ${key}: ${data[key]}`)
+    .join('\n')}\n${makeSpaces(depth + 1)}}`;
 };
-const formatter = (tree) => {
-  const result = tree.map((node) => `${makeString(node)}`).join('');
-
-  return `{\n${result}}`;
+const makeString = (tree) => {
+  const iter = (data, depth = 1) => data
+    .map((node) => {
+      const space = makeSpaces(depth);
+      const content = convertValueToString(node.currentValue, depth);
+      switch (node.type) {
+        case 'unmodified':
+          return `${space}  ${node.name}: ${content}`;
+        case 'added':
+          return `${space}+ ${node.name}: ${content}`;
+        case 'deleted':
+          return `${space}- ${node.name}: ${content}`;
+        case 'modified':
+          return `${space}- ${node.name}: ${convertValueToString(
+            node.currentValue,
+            depth,
+          )}\n${space}+ ${node.name}: ${convertValueToString(
+            node.previousValue,
+            depth,
+          )}`;
+        case 'nested':
+          return `${space}  ${node.name}: {\n${iter(
+            node.children,
+            depth + 2,
+          ).join('\n')}\n${makeSpaces(depth + 1)}}`;
+        default:
+          throw new Error(`${node.status} is unknown!`);
+      }
+    });
+  return `{\n${iter(tree).flat(Infinity).join('\n')}\n}`;
 };
-export default formatter;
+export default makeString;

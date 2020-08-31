@@ -1,30 +1,35 @@
 import _ from 'lodash';
 
 const getValue = (value) => (_.isObject(value) ? '[complex value]' : value);
-const makeString = (node) => {
-  if (node.type === 'nested') {
-    return node.children.map((child) => `${node.name}.${makeString(child)}`);
-  }
-  if (node.type === 'added') {
-    return `${node.name} was added with value: ${getValue(node.currentValue)}`;
-  }
-  if (node.type === 'deleted') {
-    return `${node.name} was deleted`;
-  }
-  if (node.type === 'modified') {
-    return `${node.name} was changed from ${getValue(
-      node.previousValue,
-    )} to ${getValue(node.currentValue)}`;
-  }
-  return 'unmodified';
-};
 const plain = (tree) => {
-  const result = tree
-    .map(makeString)
-    .flat()
-    .filter((string) => !string.includes('unmodified'))
-    .map((string) => `Property ${string}`)
-    .join('\n');
-  return result;
+  const iter = (data, path = '') =>
+    data.map((object) => {
+      switch (object.type) {
+        case 'added': {
+          return `Property ${path}${
+            object.name
+          } was added with value: ${getValue(object.currentValue)}`;
+        }
+        case 'deleted': {
+          return `Property ${path}${object.name} was deleted`;
+        }
+        case 'modified': {
+          return `Property ${path}${object.name} was chanched from ${getValue(
+            object.currentValue,
+          )} to ${getValue(object.previousValue)}`;
+        }
+        case 'unmodified': {
+          return 'unmodified';
+        }
+        case 'nested': {
+          return `${iter(object.children, `${path}${object.name}.`)
+            .filter((node) => node !== 'unmodified' && node !== '')
+            .join('\n')}`;
+        }
+        default:
+          throw new Error(`${object.type} is unknown!`);
+      }
+    });
+  return iter(tree).join('\n');
 };
 export default plain;
