@@ -2,8 +2,8 @@ import _ from 'lodash';
 
 const getValue = (value) => (_.isObject(value) ? '[complex value]' : value);
 const plain = (tree) => {
-  const iter = (data, path = '') =>
-    data.map((object) => {
+  const iter = (data, path = '') => data
+    .map((object) => {
       switch (object.type) {
         case 'added': {
           return `Property ${path}${
