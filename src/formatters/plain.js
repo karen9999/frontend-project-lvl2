@@ -3,6 +3,7 @@ import _ from 'lodash';
 const getValue = (value) => (_.isObject(value) ? '[complex value]' : value);
 const plain = (tree) => {
   const iter = (data, path = '') => data
+    .filter((node) => node.type !== 'unmodified')
     .map((object) => {
       switch (object.type) {
         case 'added': {
@@ -19,12 +20,12 @@ const plain = (tree) => {
           )} to ${getValue(object.previousValue)}`;
         }
         case 'unmodified': {
-          return 'unmodified';
+          return null;
         }
         case 'nested': {
-          return `${iter(object.children, `${path}${object.name}.`)
-            .filter((node) => node !== 'unmodified' && node !== '')
-            .join('\n')}`;
+          return `${iter(object.children, `${path}${object.name}.`).join(
+            '\n',
+          )}`;
         }
         default:
           throw new Error(`${object.type} is unknown!`);

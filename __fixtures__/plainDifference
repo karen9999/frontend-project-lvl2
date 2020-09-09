@@ -1,5 +1,6 @@
 Property common.setting2 was deleted
 Property common.setting3 was chanched from [complex value] to true
+
 Property common.follow was added with value: false
 Property common.setting4 was added with value: blah blah
 Property common.setting5 was added with value: [complex value]

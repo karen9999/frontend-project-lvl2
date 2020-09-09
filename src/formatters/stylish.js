@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const makeSpaces = (level) => '  '.repeat(level);
+const makeSpaces = (level) => '   '.repeat(level);
 
 const convertValueToString = (data, depth) => {
   if (!_.isObject(data)) {
@@ -33,7 +33,7 @@ const makeString = (tree) => {
         case 'nested':
           return `${space}  ${node.name}: {\n${iter(
             node.children,
-            depth + 2,
+            depth + 1,
           ).join('\n')}\n${makeSpaces(depth + 1)}}`;
         default:
           throw new Error(`${node.status} is unknown!`);
