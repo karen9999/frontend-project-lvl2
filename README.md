@@ -8,7 +8,7 @@
 
 
 
-<h1> CLI for compare files in formats json, ini, yaml. </h1>
+<h1>CLI app, which compares two configuration files in formats json, ini, yaml and shows a difference.</h1>
 
 <h4> example for flat files </h4>
 
